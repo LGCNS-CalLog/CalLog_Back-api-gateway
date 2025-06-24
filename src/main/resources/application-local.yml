@@ -26,14 +26,29 @@ spring:
         routes:
           # 로그 구분, 관리
           - id: callog_diet
-            # Eureka에서 callog_diet라는 이름을 가진 인스턴스 중 하나로 요청 보냄
             uri: lb://callog_diet
-            # 이 조건에 해당하는 요청만 해당 라우트로 전달됨
-            # /diet로 시작하는 요청 → Eureak에서 callog_diet로 등록된 서비스로 전달
             predicates:
               - Path=/diet/**
-
+            filters:
+              - AddAuthenticationHeader
           - id: callog-user
             uri: lb://callog-user
             predicates:
               - Path=/user/**
+            filters:
+              - AddAuthenticationHeader
+# JWT 설정
+jwt:
+  secret-key: localDevelopmentSecretKeyForTestingOnly123456789
+  expires-in: 86400  # 24시간 (초 단위)
+  mobile-expires-in: 2592000  # 30일
+  tablet-expires-in: 2592000  # 30일
+  header: "Authorization"
+
+# 🔴 새로 추가: 로깅 설정 (디버깅용)
+logging:
+  level:
+    com.callog.callog_api_gateway.security: DEBUG
+    com.callog.callog_api_gateway.filter: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
