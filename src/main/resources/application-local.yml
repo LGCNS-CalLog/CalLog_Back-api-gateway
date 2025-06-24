@@ -20,26 +20,25 @@ spring:
     config:
       enabled: false
     gateway:
-      mvc:
-        # 라우팅 설정 시작
-        # 어떤 요청을 어떤 마이크로서비스로 전달할지 설정
-        routes:
-          # 로그 구분, 관리
-          - id: callog_diet
-            uri: lb://callog_diet
-            predicates:
-              - Path=/diet/**
-            filters:
-              - AddAuthenticationHeader
-          - id: callog-user
-            uri: lb://callog-user
-            predicates:
-              - Path=/user/**
-            filters:
-              - AddAuthenticationHeader
+      server:
+        webmvc:
+          routes:
+            - id: callog-diet
+              uri: lb://callog-diet # <-- 여기를 소문자로 수정해야 합니다!
+              predicates:
+                - Path=/diet/**
+              filters:
+                - AddAuthenticationHeader
+
+            - id: callog-user
+              uri: lb://callog-user
+              predicates:
+                - Path=/user/**
+              filters:
+                - AddAuthenticationHeader
 # JWT 설정
 jwt:
-  secret-key: localDevelopmentSecretKeyForTestingOnly123456789
+  secret-key: "your-super-secret-key-must-be-same-as-user-service-minimum-32-characters-long"
   expires-in: 86400  # 24시간 (초 단위)
   mobile-expires-in: 2592000  # 30일
   tablet-expires-in: 2592000  # 30일
