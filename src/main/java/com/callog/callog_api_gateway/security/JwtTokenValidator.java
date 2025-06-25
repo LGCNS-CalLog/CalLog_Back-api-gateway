@@ -26,11 +26,10 @@ public class JwtTokenValidator {
 
     //user service랑 동일한 비밀키 생성
     private SecretKey getSecretKey() {
-        if(secretKey == null) {
+        if (secretKey == null) {
             synchronized (this) {
-                if(secretKey == null) {
-                    String finalSecret = configProperties.getSecretKey();
-                    secretKey = Keys.hmacShaKeyFor(finalSecret.getBytes());
+                if (secretKey == null) {
+                    secretKey = Keys.hmacShaKeyFor(configProperties.getSecretKey().getBytes());
                 }
             }
         }
@@ -81,16 +80,18 @@ public class JwtTokenValidator {
 
     // JWT 토큰 파싱하고 claims 추출
     private Claims verifyAndGetClaims(String token) {
+        Claims claims;
         try {
-            return Jwts.parser()
+            claims = Jwts.parser()
                     .verifyWith(getSecretKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (Exception e) {
             log.warn("JWT 토큰 검증 실패: {}", e.getMessage());
-            return null;
+            claims = null;
         }
+        return claims;
     }
 
     //
