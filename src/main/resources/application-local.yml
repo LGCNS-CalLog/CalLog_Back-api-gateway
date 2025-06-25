@@ -28,21 +28,32 @@ spring:
               predicates:
                 - Path=/diet/**
               filters:
-                - AddAuthenticationHeader
+                - addAuthenticationHeader
 
             - id: callog-user
-              uri: lb://callog-user
+              uri: lb://callog-user # <-- 여기를 소문자로 수정해야 합니다!
               predicates:
                 - Path=/user/**
               filters:
-                - AddAuthenticationHeader
+                - addAuthenticationHeader
+
+            - id: callog-user-status
+              uri: lb://callog-user-status # <-- 여기를 소문자로 수정해야 합니다!
+              predicates:
+                - Path=/userStatus/**
+              filters:
+                - addAuthenticationHeader
 # JWT 설정
+#jwt:
+#  secret-key: AADfaskllew32dsfasdTG764Gdslkj298GsWg86Ggkgkgkgkgkgkgkgk
+#  expires-in: 86400  # 24시간 (초 단위)
+#  mobile-expires-in: 2592000  # 30일
+#  tablet-expires-in: 2592000  # 30일
+#  header: "Authorization"
 jwt:
-  secret-key: "your-super-secret-key-must-be-same-as-user-service-minimum-32-characters-long"
-  expires-in: 86400  # 24시간 (초 단위)
-  mobile-expires-in: 2592000  # 30일
-  tablet-expires-in: 2592000  # 30일
-  header: "Authorization"
+  header: Authorization
+  secret-key: AADfaskllew32dsfasdTG764Gdslkj298GsWg86Ggkgkgkgkgkgkgkgk
+
 
 # 🔴 새로 추가: 로깅 설정 (디버깅용)
 logging:
